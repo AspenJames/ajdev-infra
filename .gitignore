@@ -35,3 +35,5 @@ terraform.rc
 
 # SSH keyfile
 ssh_key
+# Script tmpfiles stuff
+scripts/state
