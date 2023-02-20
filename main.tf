@@ -9,6 +9,11 @@ terraform {
       version = "4.0.4"
     }
   }
+  backend "s3" {
+    bucket = "ajdev-terraform-state"
+    key    = "aspenjames/ajdev-infra"
+    region = "us-west-2"
+  }
 }
 
 provider "aws" {
@@ -51,7 +56,6 @@ module "ajdev-node" {
 
   root_block_device = [
     {
-      encrypted   = true
       volume_type = "gp3"
       volume_size = 20
     },
