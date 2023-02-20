@@ -7,7 +7,7 @@ keyfile="$script_dir/ssh_key"
 statefile="$script_dir/state"
 
 # Update state
-cd $tf_dir && terraform show -json > $statefile && cd -
+(cd $tf_dir && terraform show -json > $statefile)
 
 # Extract ip from terraform state
 instance_ip=$(jq -r '.values.outputs.public_ip.value' $statefile)
