@@ -11,7 +11,7 @@ variable "region" {
 }
 
 variable "tags" {
-  type        = map(any)
+  type        = map(string)
   description = "Tags (K/V) to apply to resources"
   default = {
     ManagedBy = "terraform"
