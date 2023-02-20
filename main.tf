@@ -17,17 +17,7 @@ terraform {
 }
 
 provider "aws" {
-  region = local.region
-}
-
-locals {
-  name   = "ajdev"
-  region = "us-west-2"
-
-  tags = {
-    ManagedBy = "terraform"
-    Repo      = "aspenjames/ajdev-infra"
-  }
+  region = var.region
 }
 
 ################################################################################
@@ -38,7 +28,7 @@ module "ajdev-node" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "4.3.0"
 
-  name = local.name
+  name = var.name
 
   ami                         = data.aws_ami.alpine_linux.id
   instance_type               = "t3.micro"
@@ -61,7 +51,7 @@ module "ajdev-node" {
     },
   ]
 
-  tags = local.tags
+  tags = var.tags
 }
 
 ################################################################################
@@ -72,15 +62,15 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 
-  name = local.name
+  name = var.name
   cidr = "10.99.0.0/18"
 
-  azs            = ["${local.region}a"] # , "${local.region}b", "${local.region}c"]
-  public_subnets = ["10.99.0.0/24"]     # , "10.99.1.0/24", "10.99.2.0/24"]
+  azs            = ["${var.region}a"] # , "${var.region}b", "${var.region}c"]
+  public_subnets = ["10.99.0.0/24"]   # , "10.99.1.0/24", "10.99.2.0/24"]
   # private_subnets  = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
   # database_subnets = ["10.99.7.0/24", "10.99.8.0/24", "10.99.9.0/24"]
 
-  tags = local.tags
+  tags = var.tags
 }
 
 data "aws_ami" "alpine_linux" {
@@ -97,7 +87,7 @@ module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
 
-  name        = local.name
+  name        = var.name
   description = "HTTP, HTTPS, SSH, & ping"
   vpc_id      = module.vpc.vpc_id
 
@@ -105,7 +95,7 @@ module "security_group" {
   ingress_rules       = ["http-80-tcp", "https-443-tcp", "all-icmp", "ssh-tcp"]
   egress_rules        = ["http-80-tcp", "https-443-tcp", "all-icmp", "ssh-tcp"]
 
-  tags = local.tags
+  tags = var.tags
 }
 
 resource "tls_private_key" "this" {
@@ -119,5 +109,5 @@ data "tls_public_key" "this" {
 
 resource "aws_key_pair" "this" {
   public_key = data.tls_public_key.this.public_key_openssh
-  tags       = local.tags
+  tags       = var.tags
 }
