@@ -36,6 +36,12 @@ module "ajdev-node" {
   subnet_id                   = element(module.vpc.public_subnets, 0)
   vpc_security_group_ids      = [module.security_group.security_group_id]
   associate_public_ip_address = true
+  user_data = templatefile("${path.module}/files/user_data.tftpl", {
+    compose_path    = "${path.module}/files/docker-compose.yml"
+    env_file_path   = "${path.module}/files/env"
+    rc_service_path = "${path.module}/files/rc_service"
+  })
+  user_data_replace_on_change = true
 
   create_iam_instance_profile = true
   iam_role_description        = "IAM role for EC2 instance"

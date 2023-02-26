@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+
+# Install packages
+##################
+apk upgrade -qU
+apk add -qU iptables fuse-overlayfs docker docker-compose htop vim bat
+
+# Setup services
+################
+cat <<'EOF' > /home/alpine/docker-compose.yml
+${file(compose_path)}
+EOF
+chown alpine:docker /home/alpine/docker-compose.yml
+
+cat <<'EOF' > /home/alpine/.env
+${file(env_file_path)}
+EOF
+chown alpine:docker /home/alpine/.env
+
+cat <<'EOF' > /etc/init.d/ajdev
+${file(rc_service_path)}
+EOF
+chmod +x /etc/init.d/ajdev
+
+rc-update add docker
+rc-update add ajdev
+
+service docker start
+service ajdev start
+
+# Reboot
+########
+reboot

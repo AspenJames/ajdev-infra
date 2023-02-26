@@ -1,0 +1,24 @@
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+# Run docker-compose
+command="/usr/bin/docker-compose"
+compose_file_args="-f /home/alpine/docker-compose.yml"
+command_args="${compose_file_args} up"
+
+# Setup logfiles
+AJDEV_LOGFILE="${AJDEV_LOGFILE:-/var/log/${RC_SVCNAME}.log}"
+AJDEV_ERRFILE="${AJDEV_ERRFILE:-${AJDEV_LOGFILE}}"
+AJDEV_OUTFILE="${AJDEV_OUTFILE:-${AJDEV_LOGFILE}}"
+supervise_daemon_args="--stderr \"${AJDEV_ERRFILE}\" --stdout \"${AJDEV_OUTFILE}\""
+
+# Mirror docker depends plus docker
+depend() {
+  need sysfs cgroups docker
+  after docker net
+}
+
+# Pull image(s) before starting
+start_pre() {
+  ${command} ${compose_file_args} pull
+}

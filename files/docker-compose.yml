@@ -1,0 +1,7 @@
+services:
+  # Super simple to start, just put latest on :80
+  web:
+    restart: always
+    image: aspenjames/aspenjames.dev:${AJDEV_VERSION:-latest}
+    ports:
+      - 80:80
