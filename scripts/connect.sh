@@ -18,4 +18,5 @@ jq -r '.values.outputs.private_key.value' "$statefile" > "$keyfile"
 chmod 400 "$keyfile"
 
 # Connect!
+echo -e "Connecting...:\n\t$ ssh -i \"$keyfile\" \"alpine@$instance_ip\""
 ssh -i "$keyfile" "alpine@$instance_ip"
