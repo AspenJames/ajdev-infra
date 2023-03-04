@@ -8,6 +8,14 @@ terraform {
       source  = "fastly/fastly"
       version = "3.1.0"
     }
+    newrelic = {
+      source  = "newrelic/newrelic"
+      version = "3.15.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.4.3"
+    }
     tls = {
       source  = "hashicorp/tls"
       version = "4.0.4"
@@ -26,6 +34,12 @@ provider "aws" {
 
 provider "fastly" {
   api_key = var.fastly_api_key
+}
+
+provider "newrelic" {
+  account_id = var.NEW_RELIC_ACCOUNT_ID
+  api_key    = var.newrelic_api_key
+  region     = "EU"
 }
 
 ################################################################################

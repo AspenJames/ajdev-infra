@@ -10,6 +10,12 @@ variable "name" {
   default     = "ajdev"
 }
 
+variable "newrelic_api_key" {
+  type        = string
+  description = "API key for NewRelic logging"
+  sensitive   = true
+}
+
 variable "newrelic_license_key" {
   type        = string
   description = "License key for NewRelic logging"
