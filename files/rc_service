@@ -18,7 +18,7 @@ depend() {
   after docker net
 }
 
-# Pull image(s) before starting
-start_pre() {
+# Pull image(s) before stopping
+stop_pre() {
   ${command} ${compose_file_args} pull
 }
