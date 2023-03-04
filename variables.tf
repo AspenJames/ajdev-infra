@@ -10,6 +10,12 @@ variable "name" {
   default     = "ajdev"
 }
 
+variable "newrelic_license_key" {
+  type        = string
+  description = "License key for NewRelic logging"
+  sensitive   = true
+}
+
 variable "region" {
   type        = string
   description = "AWS region in which to deploy resources"

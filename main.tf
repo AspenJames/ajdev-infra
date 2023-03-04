@@ -20,12 +20,12 @@ terraform {
   }
 }
 
-provider "fastly" {
-  api_key = var.fastly_api_key
-}
-
 provider "aws" {
   region = var.region
+}
+
+provider "fastly" {
+  api_key = var.fastly_api_key
 }
 
 ################################################################################
@@ -124,51 +124,4 @@ data "tls_public_key" "this" {
 resource "aws_key_pair" "this" {
   public_key = data.tls_public_key.this.public_key_openssh
   tags       = var.tags
-}
-
-################################################################################
-# Fastly
-################################################################################
-
-resource "fastly_service_vcl" "ajdev" {
-  name = "ajdev"
-
-  domain {
-    name    = "aspenjames.dev"
-    comment = "apex"
-  }
-
-  domain {
-    name    = "www.aspenjames.dev"
-    comment = "www"
-  }
-
-  backend {
-    address = module.ajdev-node.public_ip
-    name    = "AJdev backend"
-    port    = 80
-  }
-
-  gzip {
-    name = "compress"
-    content_types = [
-      "text/html",
-      "text/css",
-      "application/javascript",
-      "application/wasm"
-    ]
-    extensions = ["html", "css", "js", "wasm"]
-  }
-
-  force_destroy = true
-}
-
-resource "fastly_tls_subscription" "ajdev" {
-  domains               = [for domain in fastly_service_vcl.ajdev.domain : domain.name]
-  certificate_authority = "lets-encrypt"
-}
-
-moved {
-  from = fastly_tls_subscription.example
-  to   = fastly_tls_subscription.ajdev
 }
