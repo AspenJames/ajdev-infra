@@ -1,3 +1,9 @@
+variable "fastly_api_key" {
+  type        = string
+  description = "API key for access to manage.fastly.com"
+  sensitive   = true
+}
+
 variable "name" {
   type        = string
   description = "Identifier for multiple resources"
