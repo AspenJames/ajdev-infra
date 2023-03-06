@@ -4,6 +4,12 @@ variable "fastly_api_key" {
   sensitive   = true
 }
 
+variable "honeycomb_api_key" {
+  type        = string
+  description = "API key for write access to honeycomb.io"
+  sensitive   = true
+}
+
 variable "name" {
   type        = string
   description = "Identifier for multiple resources"
